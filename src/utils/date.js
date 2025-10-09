@@ -20,7 +20,8 @@ export function getCurrentYear() {
  * @return {string} The formatted copyright date range.
  */
 export function formatCopyrightRange( startYear, endYear = null ) {
-	const currentYear = endYear || getCurrentYear();
+	const currentYear =
+		endYear !== null && endYear !== undefined ? endYear : getCurrentYear();
 
 	if ( ! startYear || startYear === currentYear ) {
 		return currentYear;
