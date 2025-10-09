@@ -17,15 +17,17 @@ export function getCurrentYear() {
  * @param {number} [endYear]
  * @return {string} A single year or a year range string (en dash separated)
  */
-export function formatYearRange( startYear, endYear = getCurrentYear() ) {
-	if ( ! startYear || typeof startYear !== 'number' ) {
-		throw new Error( 'startYear must be a number' );
+export function formatYearRange(startYear, endYear = getCurrentYear()) {
+	if (!startYear || typeof startYear !== 'number') {
+		throw new Error('startYear must be a number');
 	}
-	if ( endYear && typeof endYear !== 'number' ) {
-		throw new Error( 'endYear must be a number when provided' );
+	if (endYear && typeof endYear !== 'number') {
+		throw new Error('endYear must be a number when provided');
 	}
-	if ( endYear < startYear ) {
-		return String( startYear ); // Avoid weird ranges; could also throw.
+	if (endYear < startYear) {
+		return String(startYear); // Avoid weird ranges; could also throw.
 	}
-	return startYear === endYear ? String( startYear ) : `${ startYear }\u2013${ endYear }`;
+	return startYear === endYear
+		? String(startYear)
+		: `${startYear}\u2013${endYear}`;
 }
