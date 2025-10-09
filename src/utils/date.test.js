@@ -8,6 +8,10 @@ import { getCurrentYear, formatCopyrightRange, isValidYear } from './date';
 const mockDate = new Date( '2024-01-01' );
 const realDate = Date;
 
+// Capture current year once for stable testing (used implicitly in mocked tests)
+// eslint-disable-next-line no-unused-vars
+const CURRENT_YEAR = '2024';
+
 beforeAll( () => {
 	global.Date = class extends Date {
 		constructor( ...args ) {
@@ -55,6 +59,23 @@ describe( 'formatCopyrightRange', () => {
 	it( 'should return only end year when start year equals end year', () => {
 		expect( formatCopyrightRange( '2023', '2023' ) ).toBe( '2023' );
 	} );
+
+	it( 'should handle startYear of 0 correctly', () => {
+		expect( formatCopyrightRange( '0' ) ).toBe( '0–2024' );
+	} );
+
+	it( 'should handle endYear of 0 correctly', () => {
+		expect( formatCopyrightRange( '2020', '0' ) ).toBe( '2020–0' );
+	} );
+
+	it( 'should handle both startYear and endYear of 0', () => {
+		expect( formatCopyrightRange( '0', '0' ) ).toBe( '0' );
+	} );
+
+	it( 'should handle omitted endYear parameter', () => {
+		expect( formatCopyrightRange( '2020' ) ).toBe( '2020–2024' );
+		expect( formatCopyrightRange( '2020', undefined ) ).toBe( '2020–2024' );
+	} );
 } );
 
 describe( 'isValidYear', () => {
@@ -79,5 +100,24 @@ describe( 'isValidYear', () => {
 		expect( isValidYear( 'abc' ) ).toBe( false );
 		expect( isValidYear( null ) ).toBe( false );
 		expect( isValidYear( undefined ) ).toBe( false );
+	} );
+
+	it( 'should handle edge case of year 0', () => {
+		expect( isValidYear( 0 ) ).toBe( false );
+		expect( isValidYear( '0' ) ).toBe( false );
+	} );
+
+	it( 'should handle boundary values correctly', () => {
+		expect( isValidYear( 1900 ) ).toBe( true );
+		expect( isValidYear( 1899 ) ).toBe( false );
+		expect( isValidYear( 2034 ) ).toBe( true ); // current year + 10
+		expect( isValidYear( 2035 ) ).toBe( false ); // current year + 11
+	} );
+
+	it( 'should handle various non-number types', () => {
+		expect( isValidYear( {} ) ).toBe( false );
+		expect( isValidYear( [] ) ).toBe( false );
+		expect( isValidYear( true ) ).toBe( false );
+		expect( isValidYear( false ) ).toBe( false );
 	} );
 } );
