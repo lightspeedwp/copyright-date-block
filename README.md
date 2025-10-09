@@ -101,5 +101,30 @@ Recommended local commands before tagging a release:
 
 After tagging and pushing the tag, GitHub Actions will publish a Release that includes the zip.
 
+## Scripts
+
+### GitHub Projects Management
+
+The repository includes a script for managing GitHub project fields:
+
+- **`scripts/update-projects.sh`**: A comprehensive script for creating and managing GitHub project fields using GitHub CLI
+  - Automatically detects project owner and handles authentication
+  - Supports dry-run mode for previewing changes
+  - Interactive scope refresh for GitHub CLI authentication
+  - Customizable project owner and number overrides
+  - Full test coverage with Bats testing framework
+
+Usage:
+```bash
+# Preview changes without executing
+./scripts/update-projects.sh --dry-run
+
+# Run with specific project
+./scripts/update-projects.sh --project-owner myorg --project-number 1
+
+# Interactive scope refresh if needed
+./scripts/update-projects.sh --auto-refresh
+```
+
 ## License
 Licensed under the [GPL-2.0-or-later](LICENSE).
