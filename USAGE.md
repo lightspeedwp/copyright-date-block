@@ -86,7 +86,6 @@ I added an advanced example file at `examples/advanced-usage.php`. To use it in 
 
     require get_template_directory() . '/inc/advanced-usage.php';
 
-<<<<<<< Updated upstream
 This file demonstrates registering a Customizer setting for a site-wide starting year and provides `the_site_copyright()` helper function for templates.
 
 ```css
