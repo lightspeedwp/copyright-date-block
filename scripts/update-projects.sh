@@ -28,9 +28,21 @@ AUTO_REFRESH=false
 DRY_RUN=false
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
+<<<<<<< Updated upstream
 # Required GitHub CLI scopes
 REQUIRED_SCOPES=("repo" "project" "read:org" "read:user")
 
+=======
+<<<<<<< Updated upstream
+# Usage message
+=======
+# Required GitHub CLI scopes
+REQUIRED_SCOPES=("repo" "project" "read:org" "read:user")
+
+# Max attempts when trying to refresh scopes interactively to avoid infinite loops
+MAX_REFRESH_ATTEMPTS=2
+
+>>>>>>> Stashed changes
 # Colors for output
 RED='\033[0;31m'
 GREEN='\033[0;32m'
@@ -56,6 +68,10 @@ log_error() {
 }
 
 # Show help message
+<<<<<<< Updated upstream
+=======
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
 show_help() {
     cat << EOF
 GitHub Projects Field Update Script
@@ -151,6 +167,22 @@ get_current_scopes() {
         log_error "Failed to get current scopes"
         return 1
     fi
+<<<<<<< Updated upstream
+=======
+
+<<<<<<< Updated upstream
+    # Extract scopes from response headers
+    local scopes
+    scopes=$(echo "$auth_response" | grep -i "x-oauth-scopes:" | cut -d' ' -f2- | tr -d '\r\n' || echo "")
+=======
+# Check if required scopes are present
+check_required_scopes() {
+    # Optional attempt counter to avoid infinite refresh loops
+    local attempt="${1:-0}"
+    local current_scopes
+    current_scopes=$(get_current_scopes)
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
     
     # Extract scopes from X-OAuth-Scopes header
     local current_scopes
@@ -179,10 +211,26 @@ check_required_scopes() {
     done
     
     if [[ ${#missing_scopes[@]} -gt 0 ]]; then
+<<<<<<< Updated upstream
         log_warning "Missing required scopes: ${missing_scopes[*]}"
         
         if [[ "$AUTO_REFRESH" == true ]]; then
             refresh_gh_scopes "${missing_scopes[@]}"
+=======
+<<<<<<< Updated upstream
+        echo "Missing required scopes: ${missing_scopes[*]}" >&2
+        if [[ "$AUTO_REFRESH" == true && $REFRESH_ATTEMPTS -lt $MAX_REFRESH_ATTEMPTS ]]; then
+            echo "Attempting to refresh authentication..."
+            refresh_auth
+            return $?
+=======
+        log_warning "Missing required scopes: ${missing_scopes[*]}"
+
+        if [[ "$AUTO_REFRESH" == true ]]; then
+            # Pass the current attempt count to refresh_gh_scopes so it can guard retries
+            refresh_gh_scopes "$attempt" "${missing_scopes[@]}"
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
         else
             log_error "Required scopes are missing. Use --auto-refresh to fix this automatically."
             log_info "Or run manually: gh auth refresh -s $(IFS=,; echo "${REQUIRED_SCOPES[*]}")"
@@ -251,6 +299,7 @@ detect_project_owner() {
         fi
     fi
     
+<<<<<<< Updated upstream
     # If still no owner, try to get from gh CLI
     if [[ -z "$PROJECT_OWNER" ]]; then
         if command -v gh &> /dev/null && gh auth status &> /dev/null; then
@@ -261,6 +310,208 @@ detect_project_owner() {
         fi
     fi
     
+=======
+    echo "✓ Authentication and scopes verified"
+    return 0
+}
+
+<<<<<<< Updated upstream
+# Refresh authentication with required scopes
+refresh_auth() {
+    ((REFRESH_ATTEMPTS++))
+    
+    if [[ $REFRESH_ATTEMPTS -ge $MAX_REFRESH_ATTEMPTS ]]; then
+        echo "Error: Maximum refresh attempts ($MAX_REFRESH_ATTEMPTS) reached" >&2
+        return 1
+    fi
+    
+    echo "Refreshing GitHub authentication (attempt $REFRESH_ATTEMPTS/$MAX_REFRESH_ATTEMPTS)..."
+    
+    if gh auth refresh -s project -s repo; then
+        echo "✓ Authentication refreshed successfully"
+        # Recursively check scopes again
+        check_auth_scopes
+        return $?
+=======
+# Refresh GitHub CLI scopes interactively
+refresh_gh_scopes() {
+    # First arg is the current attempt counter
+    local attempt="${1:-0}"
+    shift || true
+    local missing_scopes=("$@")
+
+    log_info "Refreshing GitHub CLI scopes..."
+    log_info "Missing scopes: ${missing_scopes[*]}"
+
+    # Determine next attempt count and enforce max attempts
+    local next_attempt=$((attempt + 1))
+    if [[ $next_attempt -gt $MAX_REFRESH_ATTEMPTS ]]; then
+        log_error "Maximum scope refresh attempts ($MAX_REFRESH_ATTEMPTS) reached. Aborting."
+        return 1
+    fi
+
+    read -p "Do you want to refresh scopes now? [y/N]: " -n 1 -r
+    echo
+
+    if [[ $REPLY =~ ^[Yy]$ ]]; then
+        log_info "Refreshing scopes: ${REQUIRED_SCOPES[*]} (attempt $next_attempt of $MAX_REFRESH_ATTEMPTS)"
+
+        if gh auth refresh -s "$(IFS=,; echo "${REQUIRED_SCOPES[*]}")"; then
+            log_success "Scopes refreshed successfully"
+
+            # Re-check scopes, passing the incremented attempt counter to avoid infinite recursion
+            if check_required_scopes "$next_attempt"; then
+                log_success "All required scopes are now available"
+            else
+                log_error "Scope refresh failed after attempt $next_attempt"
+                return 1
+            fi
+        else
+            log_error "Failed to refresh scopes"
+            return 1
+        fi
+>>>>>>> Stashed changes
+    else
+        echo "Error: Failed to refresh authentication" >&2
+        return 1
+    fi
+}
+
+# Safe command execution function
+execute_command() {
+<<<<<<< Updated upstream
+    local cmd=("$@")
+    
+    if [[ "$DRY_RUN" == true ]]; then
+        echo "[DRY RUN] Would execute: ${cmd[*]}"
+        return 0
+=======
+    # Usage: execute_command "Description" cmd arg1 arg2 ...
+    local description="$1"
+    shift || true
+
+    if [[ -n "$description" ]]; then
+        log_info "$description"
+    fi
+
+    if [[ "$DRY_RUN" == true ]]; then
+        # Print the command safely
+        local cmd_str
+        printf -v cmd_str '%q ' "$@"
+        echo -e "${YELLOW}[DRY-RUN]${NC} $cmd_str"
+    else
+        log_info "Executing: $*"
+        # Execute command without eval to avoid injection; use "${@}" expansion
+        "$@"
+>>>>>>> Stashed changes
+    fi
+    
+    echo "Executing: ${cmd[*]}"
+    "${cmd[@]}"
+}
+
+# Build project field creation command array
+build_project_field_cmd() {
+    local field_name="$1"
+    local field_type="$2"
+    local project_owner="$3"
+    local project_number="$4"
+    
+    # Validate inputs
+    if [[ -z "$field_name" || -z "$field_type" || -z "$project_owner" || -z "$project_number" ]]; then
+        echo "Error: Missing required parameters for project field creation" >&2
+        return 1
+    fi
+    
+    # Build command array safely (no eval needed)
+    local cmd=(
+        "gh"
+        "project"
+        "field-create"
+        "$project_owner/$project_number"
+        "--name"
+        "$field_name"
+        "--data-type"  # Fixed: replaced invalid --type with --data-type
+        "$field_type"
+    )
+    
+    # Return command array (caller handles execution)
+    printf '%s\n' "${cmd[@]}"
+}
+
+# Create a project field with safe command construction
+create_project_field() {
+    local field_name="$1"
+<<<<<<< Updated upstream
+    local field_type="$2"
+    local project_owner="$3"
+    local project_number="$4"
+    
+    echo "Creating project field: $field_name ($field_type)"
+    
+    # Build command array using helper
+    local cmd_array
+    if ! cmd_array=$(build_project_field_cmd "$field_name" "$field_type" "$project_owner" "$project_number"); then
+        return 1
+    fi
+    
+    # Convert to array and execute
+    local cmd=()
+    while IFS= read -r line; do
+        cmd+=("$line")
+    done <<< "$cmd_array"
+    
+    execute_command "${cmd[@]}"
+=======
+    local field_type="${2:-text}"
+    shift 2 || true
+    # Remaining args are additional gh flags/values (e.g. --options "A,B,C")
+    local field_args=("$@")
+
+    # Build command array using helper so tests can inspect it
+    mapfile -t cmd < <(build_project_field_cmd "$field_name" "$field_type" "${field_args[@]}")
+
+    if [[ -n "$PROJECT_NUMBER" ]]; then
+        cmd+=(--number "$PROJECT_NUMBER")
+    fi
+
+    cmd+=(--name "$field_name" --data-type "$field_type")
+
+    if [[ ${#field_args[@]} -gt 0 ]]; then
+        cmd+=("${field_args[@]}")
+    fi
+
+    execute_command "Creating project field: $field_name ($field_type)" "${cmd[@]}"
+}
+
+# Build the gh project field-create command as newline-separated tokens (for easy capture)
+build_project_field_cmd() {
+    local field_name="$1"
+    local field_type="$2"
+    shift 2 || true
+    local field_args=("$@")
+
+    local parts=(gh project field-create --owner "$PROJECT_OWNER")
+    if [[ -n "$PROJECT_NUMBER" ]]; then
+        parts+=(--number "$PROJECT_NUMBER")
+    fi
+    parts+=(--name "$field_name" --data-type "$field_type")
+    if [[ ${#field_args[@]} -gt 0 ]]; then
+        parts+=("${field_args[@]}")
+    fi
+
+    # Print each part on its own line so callers can read into an array
+    for p in "${parts[@]}"; do
+        printf '%s\n' "$p"
+    done
+>>>>>>> Stashed changes
+}
+
+# Validate required parameters
+validate_parameters() {
+    local errors=()
+    
+>>>>>>> Stashed changes
     if [[ -z "$PROJECT_OWNER" ]]; then
         log_error "Could not auto-detect project owner. Please use --project-owner option."
         exit 1
@@ -312,6 +563,7 @@ main() {
     
     parse_args "$@"
     
+<<<<<<< Updated upstream
     # Preliminary checks
     check_gh_cli
     check_gh_auth
@@ -329,6 +581,40 @@ main() {
     
     create_project_field "Priority" "single_select" "--options \"High,Medium,Low\""
     create_project_field "Status" "single_select" "--options \"Todo,In Progress,Done\""
+=======
+<<<<<<< Updated upstream
+    # Validate parameters
+    if ! validate_parameters; then
+        exit 1
+    fi
+    
+    # Check authentication and scopes
+    if ! check_auth_scopes; then
+        echo "Error: Authentication/scope check failed" >&2
+        exit 1
+=======
+    # Preliminary checks (skip when doing a dry-run)
+    if [[ "$DRY_RUN" != true ]]; then
+        check_gh_cli
+        check_gh_auth
+        check_required_scopes
+    else
+        log_info "Dry-run: skipping GitHub CLI checks (no network calls)"
+    fi
+    
+    # Project setup
+    detect_project_owner
+    
+    if [[ "$DRY_RUN" == true ]]; then
+        log_info "Running in DRY-RUN mode - no actual changes will be made"
+    fi
+    
+    # Example field creation (customize as needed)
+    log_info "Creating example project fields..."
+    
+    create_project_field "Priority" "single_select" --options "High,Medium,Low"
+    create_project_field "Status" "single_select" --options "Todo,In Progress,Done"
+>>>>>>> Stashed changes
     create_project_field "Assignee" "text"
     create_project_field "Due Date" "date"
     
@@ -336,8 +622,24 @@ main() {
     
     if [[ "$DRY_RUN" == true ]]; then
         log_info "This was a dry run. Use without --dry-run to execute commands."
+<<<<<<< Updated upstream
+=======
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
     fi
 }
 
+<<<<<<< Updated upstream
 # Run main function with all arguments
 main "$@"
+=======
+<<<<<<< Updated upstream
+# Only run main if script is executed directly (not sourced)
+if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
+=======
+# If the script is executed (not sourced), run main
+if [[ "${SKIP_MAIN:-0}" != "1" && "${BASH_SOURCE[0]}" == "${0}" ]]; then
+>>>>>>> Stashed changes
+    main "$@"
+fi
+>>>>>>> Stashed changes

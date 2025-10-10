@@ -53,3 +53,10 @@ node_modules/
 # Build artifacts
 build/
 *.zip
+
+# Playwright
+/test-results/
+/test-results/.last-run.json
+/playwright-report/
+/blob-report/
+/playwright/.cache/
