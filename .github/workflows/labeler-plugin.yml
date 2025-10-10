@@ -1,0 +1,39 @@
+# Default labeler rules for WordPress plugin repositories (multi‑block or extensions)
+#
+# These rules assign labels based on file paths and languages to aid triage and
+# release notes. Labels must match the org‑wide conventions (lower‑case
+# kebab‑case) and correspond to the `area:*` and `lang:*` families.
+
+area:
+  block-editor:
+    - 'src/blocks/**'
+    - '**/block.json'
+  theme:
+    - 'templates/**'
+    - 'patterns/**'
+  backend:
+    - 'includes/**'
+    - 'classes/**'
+    - 'lib/**'
+  ci:
+    - '.github/workflows/**'
+    - 'composer.json'
+    - 'package.json'
+    - 'webpack.config.js'
+  dependencies:
+    - 'composer.lock'
+    - 'package-lock.json'
+
+lang:
+  php:
+    - '**/*.php'
+  javascript:
+    - '**/*.js'
+    - '**/*.jsx'
+    - '**/*.ts'
+    - '**/*.tsx'
+  css:
+    - '**/*.css'
+    - '**/*.scss'
+  md:
+    - '**/*.md'

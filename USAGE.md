@@ -1,81 +1,71 @@
-# Copyright Date Block Usage Guide
+# Usage — Copyright Date Block
 
-## Table of Contents
+Table of contents
 
-1. [Overview](#overview)
-2. [Basic Usage](#basic-usage)
-3. [Block Configuration](#block-configuration)
-4. [Advanced Usage](#advanced-usage)
-5. [Template Integration](#template-integration)
-6. [Customization](#customization)
-7. [Troubleshooting](#troubleshooting)
+- Introduction
+- Installation
+- Adding the block
+- Block settings
+- Examples
+- Using the block in PHP templates
+- Development commands
 
-## Overview
+## Introduction
 
-The Copyright Date Block provides a dynamic way to display copyright dates in your WordPress content. The block automatically updates to show the current year and can be configured to display date ranges.
+The Copyright Date Block displays an always-up-to-date copyright year on your site. It supports an optional start year to show ranges such as `2020–2025`, and uses server-side rendering so the front end always reflects the current year.
 
-## Basic Usage
+## Installation
 
-### Adding the Block
+1. Place the `copyright-date-block` folder in your site's `wp-content/plugins` directory.
+2. From the plugin directory run:
 
-1. Open a post or page in the WordPress block editor
-2. Click the "+" button to add a new block
-3. Search for "Copyright Date" or find it in the "Widgets" category
-4. Click to insert the block
+    npm install
+    npm run build
 
-### Default Behavior
+3. Activate the plugin from the WordPress Plugins screen.
 
-By default, the block displays:
-```
-© 2024
-```
+## Adding the block
 
-The year automatically updates based on the current date, ensuring your copyright information stays current without manual updates.
+- Edit a post, page, or open the Site Editor (Appearance → Editor).
+- Insert the **Copyright Date** block where you want the copyright line to appear.
 
-## Block Configuration
+## Block settings
 
-### Settings Panel
+- Show starting year (toggle): enables a starting year so the block displays a range.
+- Starting year (input): 4-digit year (for example `2020`).
+- Text color / font size: use the block controls to match your theme.
 
-When the Copyright Date Block is selected, you'll see configuration options in the Settings sidebar:
+## Examples
 
-#### Show Starting Year
-- **Toggle**: Enable to display a date range
-- **Starting Year Field**: Enter the year your content or site was first published
-- **Result**: Displays as "© 2020–2024" (example)
+Single year (site launched this year):
 
-### Validation
-- Starting years must be between 1900 and the current year + 10
-- Invalid years will not be saved
-- Empty or invalid starting years default to current year only
+    © 2025
 
-## Advanced Usage
+Range when starting year is provided and older than current year:
 
-For advanced implementation examples, see [`examples/advanced-usage.php`](examples/advanced-usage.php) which includes:
+    © 2020–2025
 
-- Theme Customizer integration
-- Template helper functions
-- Programmatic block insertion
-- Custom styling options
+## Using the block in PHP templates
 
-## Template Integration
+If you prefer to inject the block markup via PHP (for example in a theme template), the following minimal example will render the block and allow the plugin's server-side render function (`src/render.php`) to output the correct markup:
 
-### PHP Template Files
+    <?php
+    echo apply_filters( 'the_content', '<!-- wp:copyright-date-block/copyright-date {"showStartingYear":true,"startingYear":2020} /-->' );
+    ?>
 
-You can manually render copyright dates in PHP templates using the utility functions:
+This approach is useful when you want a static insertion point in a theme file rather than managing the block inside the editor.
 
-```php
-<?php
-// Include the plugin functions
-if ( function_exists( 'create_block_copyright_date_block_init' ) ) {
-    // The block is available
-    echo '© ' . date( 'Y' );
-}
-?>
-```
+## Development commands
 
-### Block Patterns
+- `npm start` — development watcher with hot reload
+- `npm run build` — production build
+- `npm test` — run unit tests
+- `npm run lint:js` / `npm run lint:css` — linting
+- `npm run plugin-zip` — generate a zip for distribution
 
-Create reusable patterns that include the Copyright Date Block:
+---
+
+If you'd like, I can also:
 
 ```php
 register_block_pattern(
@@ -89,11 +79,14 @@ register_block_pattern(
 );
 ```
 
-## Customization
+- Add screenshots to `USAGE.md` showing the inspector controls.
+- Provide a more advanced PHP example that loads the starting year from a theme option or site setting.
 
-### Styling
+I added an advanced example file at `examples/advanced-usage.php`. To use it in a theme, copy the file into your theme (for example `wp-content/themes/yourtheme/inc/advanced-usage.php`) and include it from your theme's `functions.php`:
 
-The block outputs minimal HTML that can be styled with CSS:
+    require get_template_directory() . '/inc/advanced-usage.php';
+
+This file demonstrates registering a Customizer setting for a site-wide starting year and provides `the_site_copyright()` helper function for templates.
 
 ```css
 .wp-block-copyright-date-copyright-date-block {
@@ -146,3 +139,17 @@ For developers working with this plugin:
 - Follow coding standards defined in `.eslintrc.json`
 - Run tests with `npm test` before contributing
 - See README.md for development setup instructions
+
+## Advanced Usage
+
+An advanced example is provided at `examples/advanced-usage.php`. It demonstrates registering a Customizer setting for a site-wide starting year and exposing a `the_site_copyright()` helper for use in theme templates.
+
+Usage:
+
+1. Copy `examples/advanced-usage.php` into your theme, for example:
+
+    // wp-content/themes/yourtheme/inc/advanced-usage.php
+
+1. Include it from your theme's `functions.php`:
+
+    require get_template_directory() . '/inc/advanced-usage.php';

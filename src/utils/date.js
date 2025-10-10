@@ -1,33 +1,38 @@
 /**
- * Date utility functions for the Copyright Date Block.
+ * Utility functions related to dates used by the copyright block.
  */
 
 /**
- * Get the current year as a string.
- *
- * @return {string} The current year.
+ * Get current year as number.
+ * @return {number} The current full year (e.g., 2025)
  */
 export function getCurrentYear() {
-	return new Date().getFullYear().toString();
+	return new Date().getFullYear();
 }
 
 /**
- * Format a copyright date range.
- *
- * @param {string} startYear The starting year.
- * @param {string} endYear   The ending year (defaults to current year).
- *
- * @return {string} The formatted copyright date range.
+ * Build a year range string (e.g., "2020–2025") given a start year and optional end year.
+ * If start and end are identical or end is missing, returns single year.
+ * @param {number} startYear
+ * @param {number} [endYear]
+ * @return {string} A single year or a year range string (en dash separated)
  */
-export function formatCopyrightRange( startYear, endYear = null ) {
-	const currentYear =
-		endYear !== null && endYear !== undefined ? endYear : getCurrentYear();
-
-	if ( ! startYear || startYear === currentYear ) {
-		return currentYear;
+export function formatYearRange( startYear, endYear = getCurrentYear() ) {
+	if ( typeof startYear !== 'number' || Number.isNaN( startYear ) ) {
+		throw new Error( 'startYear must be a number' );
 	}
-
-	return `${ startYear }–${ currentYear }`;
+	if (
+		endYear &&
+		( typeof endYear !== 'number' || Number.isNaN( endYear ) )
+	) {
+		throw new Error( 'endYear must be a number when provided' );
+	}
+	if ( endYear < startYear ) {
+		return String( startYear ); // Avoid odd reversed ranges; alternative would be to throw.
+	}
+	return startYear === endYear
+		? String( startYear )
+		: `${ startYear }\u2013${ endYear }`;
 }
 
 /**

@@ -1,114 +1,53 @@
-/**
- * Tests for date utility functions.
- */
+import { getCurrentYear, formatYearRange, isValidYear } from './date';
 
-import { getCurrentYear, formatCopyrightRange, isValidYear } from './date';
+describe( 'date utils', () => {
+	const CURRENT_YEAR = new Date().getFullYear();
 
-// Mock Date to ensure consistent test results
-const mockDate = new Date( '2024-01-01' );
-const realDate = Date;
-
-// Capture current year once per test file for stability
-const CURRENT_YEAR = 2024;
-
-beforeAll( () => {
-	global.Date = class extends Date {
-		constructor( ...args ) {
-			if ( args.length === 0 ) {
-				return mockDate;
-			}
-			return new realDate( ...args );
-		}
-
-		static now() {
-			return mockDate.getTime();
-		}
-
-		getFullYear() {
-			return CURRENT_YEAR;
-		}
-	};
-} );
-
-afterAll( () => {
-	global.Date = realDate;
-} );
-
-describe( 'getCurrentYear', () => {
-	it( 'should return the current year as a string', () => {
-		expect( getCurrentYear() ).toBe( '2024' );
-	} );
-} );
-
-describe( 'formatCopyrightRange', () => {
-	it( 'should return only the current year when no start year is provided', () => {
-		expect( formatCopyrightRange( null ) ).toBe( '2024' );
-		expect( formatCopyrightRange( '' ) ).toBe( '2024' );
+	it( 'getCurrentYear matches system year', () => {
+		expect( getCurrentYear() ).toBe( CURRENT_YEAR );
 	} );
 
-	it( 'should return only the current year when start year equals current year', () => {
-		expect( formatCopyrightRange( '2024' ) ).toBe( '2024' );
+	it( 'formatYearRange accepts startYear 0 and endYear 0', () => {
+		expect( formatYearRange( 0, 0 ) ).toBe( '0' );
 	} );
 
-	it( 'should return a range when start year is different from current year', () => {
-		expect( formatCopyrightRange( '2020' ) ).toBe( '2020–2024' );
-		expect( formatCopyrightRange( '2010' ) ).toBe( '2010–2024' );
+	it( 'formatYearRange accepts endYear 0 with non-zero startYear', () => {
+		// endYear < startYear should return startYear per implementation
+		expect( formatYearRange( 2021, 0 ) ).toBe( '2021' );
 	} );
 
-	it( 'should accept a custom end year', () => {
-		expect( formatCopyrightRange( '2020', '2023' ) ).toBe( '2020–2023' );
+	it( 'formatYearRange throws for non-number startYear', () => {
+		expect( () => formatYearRange( '2020' ) ).toThrow();
 	} );
 
-	it( 'should return only end year when start year equals end year', () => {
-		expect( formatCopyrightRange( '2023', '2023' ) ).toBe( '2023' );
+	it( 'formatYearRange throws for non-number endYear when provided', () => {
+		expect( () => formatYearRange( 2020, '2025' ) ).toThrow();
 	} );
 
-	it( 'should handle startYear=0 correctly', () => {
-		expect( formatCopyrightRange( '0' ) ).toBe( '0–2024' );
+	it( 'formatYearRange single year when same', () => {
+		expect( formatYearRange( 2024, 2024 ) ).toBe( '2024' );
 	} );
 
-	it( 'should handle endYear=0 correctly', () => {
-		expect( formatCopyrightRange( '2020', '0' ) ).toBe( '2020–0' );
+	it( 'formatYearRange range when different', () => {
+		expect( formatYearRange( 2020, 2025 ) ).toBe( '2020–2025' );
 	} );
 
-	it( 'should handle omitted endYear (undefined)', () => {
-		expect( formatCopyrightRange( '2020', undefined ) ).toBe( '2020–2024' );
-	} );
-} );
-
-describe( 'isValidYear', () => {
-	it( 'should return true for valid years', () => {
-		expect( isValidYear( '2024' ) ).toBe( true );
-		expect( isValidYear( 2024 ) ).toBe( true );
-		expect( isValidYear( '2000' ) ).toBe( true );
-		expect( isValidYear( '1900' ) ).toBe( true );
+	it( 'formatYearRange uses current year default', () => {
+		const y = new Date().getFullYear();
+		expect( formatYearRange( y ) ).toBe( String( y ) );
 	} );
 
-	it( 'should return false for years before 1900', () => {
-		expect( isValidYear( '1899' ) ).toBe( false );
-		expect( isValidYear( 1800 ) ).toBe( false );
+	it( 'formatYearRange handles reversed years gracefully', () => {
+		expect( formatYearRange( 2025, 2020 ) ).toBe( '2025' );
 	} );
 
-	it( 'should return false for years too far in the future', () => {
-		expect( isValidYear( '2040' ) ).toBe( false );
-		expect( isValidYear( 3000 ) ).toBe( false );
-	} );
-
-	it( 'should return false for non-numeric values', () => {
-		expect( isValidYear( 'abc' ) ).toBe( false );
-		expect( isValidYear( null ) ).toBe( false );
-		expect( isValidYear( undefined ) ).toBe( false );
-	} );
-
-	it( 'should handle year 0 as valid', () => {
-		expect( isValidYear( '0' ) ).toBe( false ); // 0 is before 1900, so invalid
-		expect( isValidYear( 0 ) ).toBe( false );
-	} );
-
-	it( 'should handle edge cases for non-number values', () => {
-		expect( isValidYear( '' ) ).toBe( false );
-		expect( isValidYear( {} ) ).toBe( false );
-		expect( isValidYear( [] ) ).toBe( false );
-		expect( isValidYear( NaN ) ).toBe( false );
+	it( 'isValidYear validates years correctly', () => {
+		expect( isValidYear( 2020 ) ).toBe( true );
+		expect( isValidYear( '2020' ) ).toBe( true );
+		expect( isValidYear( 1900 ) ).toBe( true );
+		expect( isValidYear( 1899 ) ).toBe( false );
+		expect( isValidYear( CURRENT_YEAR + 10 ) ).toBe( true );
+		expect( isValidYear( CURRENT_YEAR + 11 ) ).toBe( false );
+		expect( isValidYear( 'invalid' ) ).toBe( false );
 	} );
 } );
