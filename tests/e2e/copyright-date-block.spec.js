@@ -25,10 +25,10 @@ test.describe( 'Copyright Date Block', () => {
 		await page.keyboard.type( '/copyright' );
 
 		// Wait for block to appear in search results
-		await page.waitForSelector( '[data-title="Copyright Date"]', {
+		await page.waitForSelector( '[data-type="copyright-date-block/copyright-date"]', {
 			timeout: 5000,
 		} );
-		await page.click( '[data-title="Copyright Date"]' );
+		await page.click( '[data-type="copyright-date-block/copyright-date"]' );
 
 		// Verify the block is added
 		await expect(
