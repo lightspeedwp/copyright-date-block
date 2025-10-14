@@ -70,11 +70,100 @@ The plugin's `src/render.php` handles the server-side rendering so the final out
 
 `npm test` – Execute unit tests located in `src/utils/*.test.js`.
 
+`npm run test:e2e` – Run end-to-end tests using Playwright.
+
+`npm run test:e2e:ui` – Run Playwright tests in interactive UI mode.
+
+`npm run test:e2e:headed` – Run Playwright tests in headed mode (with browser UI visible).
+
 `npm run lint:js` / `npm run lint:css` – Lint JavaScript and CSS using the WordPress coding standards.
 
 `npm run env start` / `npm run env stop` – Spin up or tear down a local WordPress environment via `@wordpress/env`.
 
 When contributing changes, please run the linters and tests before opening a pull request. The GitHub Actions workflow mirrors this sequence (lint → test → build → package).
+
+### E2E Testing
+
+This project uses [Playwright](https://playwright.dev/) for comprehensive browser-based end-to-end testing across multiple browsers (Chromium, Firefox, WebKit).
+
+#### How to Run Playwright Tests
+
+1. **Start your local WordPress environment:**
+
+   ```bash
+   npm run env start
+   ```
+
+2. **Run the tests:**
+
+   ```bash
+   npm run test:e2e          # Run tests headless
+   npm run test:e2e:ui       # Run with interactive UI
+   npm run test:e2e:headed   # Run with visible browser
+   ```
+
+#### Test Configuration
+
+- Tests are located in `tests/e2e/` directory
+- The Playwright configuration assumes your local WordPress site runs on `http://localhost:8888`
+- Tests will automatically start the WordPress environment if it's not already running
+- The configuration supports multi-browser testing and includes automatic retry on CI
+
+#### What Tests Are Included
+
+- **Block Editor Integration**: Tests adding the Copyright Date block in the WordPress editor
+- **Frontend Rendering**: Verifies the block displays correctly on the published site with current year
+- **Settings Functionality**: Tests the starting year toggle and input validation
+
+#### Customizing Test URLs
+
+If your local development site runs on a different URL, update the `baseURL` in `playwright.config.js`:
+
+```js
+use: {
+  baseURL: 'http://localhost:3000', // Change to your local site URL
+  // ... other settings
+},
+```
+
+## Contributing
+
+We welcome contributions to the Copyright Date Block! Please follow these guidelines:
+
+### Before submitting a pull request
+
+1. **Run all quality checks:**
+
+   ```bash
+   npm run lint:fix    # Fix linting issues
+   npm test           # Run unit tests
+   npm run test:e2e   # Run end-to-end tests
+   npm run build      # Verify build succeeds
+   ```
+
+2. **Code standards:**
+   - Follow WordPress coding standards for PHP and JavaScript
+   - Use meaningful commit messages following conventional commits format
+   - Add tests for new functionality
+   - Update documentation as needed
+
+3. **Testing requirements:**
+   - All existing tests must pass
+   - New features should include corresponding unit and/or E2E tests
+   - E2E tests should cover both editor and frontend functionality
+
+4. **Development workflow:**
+   - Create a feature branch from `develop`
+   - Make your changes with appropriate tests
+   - Ensure all linting and tests pass locally
+   - Submit a pull request with a clear description
+
+### Reporting issues
+
+- Use the GitHub issue tracker
+- Provide clear reproduction steps
+- Include WordPress version, PHP version, and browser information for E2E issues
+- Check existing issues before creating a new one
 
 ## CI / Release workflow
 
@@ -86,18 +175,20 @@ The repository includes two CI workflows:
 
 Recommended local commands before tagging a release:
 
-   # install deps (use --legacy-peer-deps if required)
-   npm install
+```bash
+# install deps (use --legacy-peer-deps if required)
+npm install
 
-   # run linters and auto-fix where possible
-   npm run lint:fix
+# run linters and auto-fix where possible
+npm run lint:fix
 
-   # run tests
-   npm test
+# run tests
+npm test
 
-   # build and create zip
-   npm run build
-   npm run plugin-zip
+# build and create zip
+npm run build
+npm run plugin-zip
+```
 
 After tagging and pushing the tag, GitHub Actions will publish a Release that includes the zip.
 
@@ -108,23 +199,56 @@ After tagging and pushing the tag, GitHub Actions will publish a Release that in
 The repository includes a script for managing GitHub project fields:
 
 - **`scripts/update-projects.sh`**: A comprehensive script for creating and managing GitHub project fields using GitHub CLI
+  - **GitHub App authentication** support via environment variables
+  - **Dynamic project detection** from LS_PROJECT_URL environment variable
   - Automatically detects project owner and handles authentication
   - Supports dry-run mode for previewing changes
   - Interactive scope refresh for GitHub CLI authentication
   - Customizable project owner and number overrides
+  - **CSV-based field definitions** for parameterized field creation
+  - **Field deletion capability** for cleaning up projects
   - Full test coverage with Bats testing framework
 
 Usage:
+
 ```bash
 # Preview changes without executing
 ./scripts/update-projects.sh --dry-run
 
-# Run with specific project
-./scripts/update-projects.sh --project-owner myorg --project-number 1
+# Create fields from CSV file
+./scripts/update-projects.sh --fields-file scripts/fixtures/fields.csv --project-owner myorg --project-number 1
+
+# Delete fields listed in CSV file
+./scripts/update-projects.sh --fields-file scripts/fixtures/fields.csv --project-owner myorg --project-number 1 --delete-fields
+
+# Preview field operations
+./scripts/update-projects.sh --fields-file scripts/fixtures/fields.csv --project-owner myorg --project-number 1 --dry-run
 
 # Interactive scope refresh if needed
 ./scripts/update-projects.sh --auto-refresh
+
+# GitHub App authentication (in CI/CD)
+LS_APP_ID="123456" LS_APP_PRIVATE_KEY="-----BEGIN RSA PRIVATE KEY-----..." LS_PROJECT_URL="https://github.com/orgs/lightspeedwp/projects/1" ./scripts/update-projects.sh --fields-file scripts/fixtures/fields.csv --dry-run
+```
+
+**Environment Variables:**
+
+- `LS_APP_ID`: GitHub App ID for authentication
+- `LS_APP_PRIVATE_KEY`: GitHub App private key (PEM format)
+- `LS_PROJECT_URL`: GitHub project URL for auto-detection of owner/number
+- `GH_TOKEN`: GitHub personal access token (alternative authentication)
+
+**CSV Format** (`scripts/fixtures/fields.csv`):
+
+```csv
+# name,type,options(optional)
+Priority,single_select,High,Medium,Low
+Status,single_select,Todo,In Progress,Done
+Assignee,text,
+Due Date,date,
+Story Points,number,
 ```
 
 ## License
+
 Licensed under the [GPL-2.0-or-later](LICENSE).

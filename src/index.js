@@ -32,7 +32,7 @@ const calendarIcon = (
  *
  * @see https://developer.wordpress.org/block-editor/developers/block-api/#registering-a-block
  */
-registerBlockType(metadata.name, {
+registerBlockType( metadata.name, {
 	icon: calendarIcon,
 	/**
 	 * @see ./edit.js
@@ -42,4 +42,4 @@ registerBlockType(metadata.name, {
 	 * @see ./save.js
 	 */
 	save,
-});
+} );

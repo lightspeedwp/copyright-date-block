@@ -67,6 +67,18 @@ This approach is useful when you want a static insertion point in a theme file r
 
 If you'd like, I can also:
 
+```php
+register_block_pattern(
+    'my-theme/footer-with-copyright',
+    array(
+        'title'       => __( 'Footer with Copyright', 'my-theme' ),
+        'description' => _x( 'Footer section with copyright date', 'Block pattern description', 'my-theme' ),
+        'content'     => '<!-- wp:copyright-date/copyright-date-block /-->',
+        'categories'  => array( 'footer' ),
+    )
+);
+```
+
 - Add screenshots to `USAGE.md` showing the inspector controls.
 - Provide a more advanced PHP example that loads the starting year from a theme option or site setting.
 
@@ -75,3 +87,69 @@ I added an advanced example file at `examples/advanced-usage.php`. To use it in 
     require get_template_directory() . '/inc/advanced-usage.php';
 
 This file demonstrates registering a Customizer setting for a site-wide starting year and provides `the_site_copyright()` helper function for templates.
+
+```css
+.wp-block-copyright-date-copyright-date-block {
+    text-align: center;
+    font-size: 0.875rem;
+    color: #666;
+    margin: 1rem 0;
+}
+
+/* For footer usage */
+.site-footer .wp-block-copyright-date-copyright-date-block {
+    margin: 0;
+    color: white;
+}
+```
+
+### Custom Formats
+
+While the block uses a standard format (© Year or © Start–End), you can modify the output using CSS pseudo-elements or JavaScript for more complex formatting needs.
+
+## Troubleshooting
+
+### Common Issues
+
+#### Block Not Showing Current Year
+- **Problem**: Block shows an old year
+- **Solution**: The block uses server-side rendering for accuracy. Clear any caching plugins and refresh the page.
+
+#### Starting Year Not Saving
+- **Problem**: Starting year input doesn't save
+- **Solution**: Ensure the year is between 1900 and current year + 10. Invalid years are rejected.
+
+#### Block Not Available
+- **Problem**: Can't find the Copyright Date Block
+- **Solution**: Ensure the plugin is activated. Check WordPress admin → Plugins.
+
+### Support
+
+For additional support:
+
+1. Check the [GitHub Issues](https://github.com/lightspeedwp/copyright-date-block/issues)
+2. Review the plugin documentation
+3. Verify WordPress and plugin versions are up to date
+
+### Development
+
+For developers working with this plugin:
+
+- Source code is available on [GitHub](https://github.com/lightspeedwp/copyright-date-block)
+- Follow coding standards defined in `.eslintrc.json`
+- Run tests with `npm test` before contributing
+- See README.md for development setup instructions
+
+## Advanced Usage
+
+An advanced example is provided at `examples/advanced-usage.php`. It demonstrates registering a Customizer setting for a site-wide starting year and exposing a `the_site_copyright()` helper for use in theme templates.
+
+Usage:
+
+1. Copy `examples/advanced-usage.php` into your theme, for example:
+
+    // wp-content/themes/yourtheme/inc/advanced-usage.php
+
+1. Include it from your theme's `functions.php`:
+
+    require get_template_directory() . '/inc/advanced-usage.php';
