@@ -1,0 +1,55 @@
+<?xml version="1.0"?>
+<ruleset name="Copyright Date Block">
+	<description>PHP_CodeSniffer configuration for Copyright Date Block plugin</description>
+
+	<!-- Check all PHP files in the plugin -->
+	<file>.</file>
+
+	<!-- Exclude vendor, build and examples directories -->
+	<exclude-pattern>*/build/*</exclude-pattern>
+	<exclude-pattern>*/node_modules/*</exclude-pattern>
+	<exclude-pattern>*/vendor/*</exclude-pattern>
+	<exclude-pattern>*/examples/*</exclude-pattern>
+
+	<!-- Use WordPress coding standards -->
+	<rule ref="WordPress">
+		<!-- Exclude filename rules for main plugin file -->
+		<exclude name="WordPress.Files.FileName.InvalidClassFileName"/>
+		<exclude name="WordPress.Files.FileName.NotHyphenatedLowercase"/>
+	</rule>
+
+	<!-- Use WordPress-Extra rules -->
+	<rule ref="WordPress-Extra">
+		<!-- Allow short array syntax -->
+		<exclude name="Generic.Arrays.DisallowShortArraySyntax"/>
+	</rule>
+
+	<!-- Use WordPress-Docs rules -->
+	<rule ref="WordPress-Docs"/>
+
+	<!-- Check for PHP compatibility -->
+	<rule ref="PHPCompatibilityWP"/>
+
+	<!-- Set minimum supported PHP version -->
+	<config name="testVersion" value="7.4-"/>
+
+	<!-- Set WordPress version for deprecated function checks -->
+	<config name="minimum_supported_wp_version" value="6.7"/>
+
+	<!-- Allow for plugin-specific prefixing -->
+	<rule ref="WordPress.NamingConventions.PrefixAllGlobals">
+		<properties>
+			<property name="prefixes" type="array">
+				<element value="create_block_copyright_date_block"/>
+				<element value="copyright_date"/>
+			</property>
+		</properties>
+	</rule>
+
+	<!-- Show progress and use colors -->
+	<arg value="p"/>
+	<arg name="colors"/>
+
+	<!-- Set extensions to check -->
+	<arg name="extensions" value="php"/>
+</ruleset>
