@@ -91,8 +91,10 @@ npm run plugin-zip
 | `npm run start` | Start development server with hot reload |
 | `npm run build` | Build production assets |
 | `npm run test` | Run Jest unit tests |
-| `npm run lint` | Run ESLint on JavaScript files |
-| `npm run lint:fix` | Fix ESLint issues automatically |
+| `npm run lint` | Run ESLint on JavaScript files and PHPCS on PHP files |
+| `npm run lint:js` | Run ESLint on JavaScript files only |
+| `npm run lint:php` | Run PHPCS on PHP files only |
+| `npm run lint:fix` | Fix ESLint and PHPCS issues automatically |
 | `npm run format` | Format code with Prettier |
 | `npm run plugin-zip` | Create distributable plugin ZIP |
 
@@ -181,10 +183,30 @@ copyright-date-block/
 
 ### Coding Standards
 
-- Follow WordPress JavaScript coding standards
+- **JavaScript**: Follow WordPress JavaScript coding standards (ESLint)
+- **PHP**: Follow WordPress PHP coding standards (PHPCS)
+- **CSS**: Follow WordPress CSS coding standards 
 - Write tests for new utility functions
 - Update documentation for new features
 - Ensure all CI checks pass
+
+#### PHP Coding Standards
+
+This project uses PHP_CodeSniffer with WordPress coding standards:
+
+```bash
+# Run PHP linting
+npm run lint:php
+
+# Fix PHP coding standards issues automatically
+npm run lint:php:fix
+```
+
+The following standards are enforced:
+- WordPress Core coding standards
+- WordPress Extra coding standards  
+- WordPress Documentation standards
+- PHP Compatibility checks (PHP 7.4+)
 
 ## License
 
