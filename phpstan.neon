@@ -1,0 +1,17 @@
+parameters:
+	level: max
+	paths:
+		- copyright-date-block.php
+		- src/
+	excludePaths:
+		- build/
+		- node_modules/
+		- vendor/
+		- tests/
+	bootstrapFiles:
+		- ./tests/bootstrap.php
+	includes:
+		- vendor/phpstan/wordpress/extension.neon
+	parallel:
+		jobSize: 20
+		maximumNumberOfProcesses: 10

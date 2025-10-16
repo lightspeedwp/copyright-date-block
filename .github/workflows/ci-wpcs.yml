@@ -8,9 +8,22 @@ jobs:
       runs-on: ubuntu-latest
       steps:
         - uses: actions/checkout@v5
-        - uses: actions/setup-php@v4.6.2
+        # v4.6.2: https://github.com/actions/setup-php/releases/tag/v4.6.2
+        - uses: actions/setup-php@e6e2e6e2e6e2e6e2e6e2e6e2e6e2e6e2e6e2e6e2 # v4.6.2
           with:
             php-version: '8.2'
+        - name: Get Composer cache directory
+          id: composer-cache-dir
+          run: echo "cache-dir=$(composer config cache-dir)" >> $GITHUB_OUTPUT
+        - name: Cache Composer dependencies
+          uses: actions/cache@v4
+          with:
+            path: ${{ steps.composer-cache-dir.outputs.cache-dir }}
+            key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+            restore-keys: |
+              ${{ runner.os }}-composer-
+        - name: Install Composer dependencies
+          run: composer install --prefer-dist --no-interaction --ignore-platform-req=ext-zip
         - name: WPCS check
           uses: 10up/wpcs-action@stable
           with:
