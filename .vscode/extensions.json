@@ -1,0 +1,54 @@
+{
+	"recommendations": [
+    // Copilot for AI-assisted coding
+    "github.copilot",
+    "github.copilot-chat",
+    "coderabbit.coderabbit-vscode",
+    "codeium.codeium",
+    "anthropic.claude-code",
+    "openai.chatgpt",
+    "google.gemini-cli-vscode-ide-companion",
+    "google.geminicodeassist",
+
+    //GitHub
+    "github.vscode-pull-request-github",
+    "github.vscode-github-actions",
+    "github.codespaces",
+    "github.remotehub",
+
+		// PHP Support and IntelliSense
+		"DEVSENSE.phptools-vscode",
+		"xdebug.php-pack",
+		"bmewburn.vscode-intelephense-client",
+
+		// WordPress-specific tools
+		"WordPressPlayground.wordpress-playground",
+
+    // Figma integration
+    "figma.figma-vscode-extension",
+
+		// Styling and formatting
+		"esbenp.prettier-vscode",
+		"stylelint.vscode-stylelint",
+		"dbaeumer.vscode-eslint",
+		"ValeryanM.vscode-phpsab",
+		"syler.sass-indented",
+    "davidanson.vscode-markdownlint",
+
+		// Language-specific extensions (adapt as needed)
+    "ms-vscode.vscode-typescript-next",
+    "ms-vscode.js-debug",
+    "ms-vscode.vscode-typescript-tslint-plugin",
+
+		// Utility extensions
+		"editorconfig.editorconfig",
+		"GitWorktrees.git-worktrees"
+
+    // Code navigation and readability
+    "vscode-icons-team.vscode-icons",
+    "aaron-bond.better-comments",
+    "eamodio.gitlens",
+    "streetsidesoftware.code-spell-checker",
+    "gruntfuggly.todo-tree"
+	]
+}

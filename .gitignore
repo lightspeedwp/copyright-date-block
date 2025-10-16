@@ -17,7 +17,6 @@ build/
 *.zip
 
 # IDE and editor files
-.vscode/
 .idea/
 *.swp
 *.swo

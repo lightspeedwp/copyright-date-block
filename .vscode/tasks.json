@@ -1,0 +1,90 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "npm: build",
+			"type": "npm",
+			"script": "build",
+			"group": "build",
+			"problemMatcher": ["$webpack-multi-watch-dev", "$eslint-stylish"],
+			"detail": "Runs the '@wordpress/scripts build' command to compile production assets."
+		},
+		{
+			"label": "npm: start",
+			"type": "npm",
+			"script": "start",
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			},
+			"problemMatcher": ["$webpack-multi-watch-dev", "$eslint-stylish"],
+			"detail": "Runs the '@wordpress/scripts start' command to build and watch assets for development."
+		},
+		{
+			"label": "npm: test-unit",
+			"type": "npm",
+			"script": "test-unit",
+			"problemMatcher": ["$jest-watch", "$jest-eslint"],
+			"detail": "Runs unit tests using '@wordpress/scripts test-unit'."
+		},
+		{
+			"label": "npm: lint-js",
+			"type": "npm",
+			"script": "lint-js",
+			"problemMatcher": ["$eslint-stylish"],
+			"detail": "Lints JavaScript files using '@wordpress/scripts lint-js'."
+		},
+		{
+			"label": "npm: lint-css",
+			"type": "npm",
+			"script": "lint-css",
+			"problemMatcher": [],
+			"detail": "Lints CSS files using '@wordpress/scripts lint-css'."
+		}
+		{
+			"label": "php: lint",
+			"type": "shell",
+			"command": "vendor/bin/phpcs --standard=phpcs.xml src/",
+			"group": "test",
+			"problemMatcher": ["$phpcs"],
+			"detail": "Lints PHP files in src/ using PHPCS and the local standard."
+		},
+		{
+			"label": "plugin: zip",
+			"type": "shell",
+			"command": "zip -r build/copyright-date-block.zip src/ assets/ copyright-date-block.php readme.txt",
+			"group": "build",
+			"detail": "Packages the plugin into a zip file for distribution."
+		},
+		{
+			"label": "e2e: test",
+			"type": "shell",
+			"command": "npx playwright test",
+			"group": "test",
+			"problemMatcher": [],
+			"detail": "Runs Playwright E2E tests."
+		},
+		{
+			"label": "npm: test-coverage",
+			"type": "npm",
+			"script": "test-unit -- --coverage",
+			"group": "test",
+			"problemMatcher": ["$jest-watch", "$jest-eslint"],
+			"detail": "Runs unit tests with coverage reporting."
+		},
+		{
+			"label": "composer: install",
+			"type": "shell",
+			"command": "composer install",
+			"group": "build",
+			"detail": "Installs PHP dependencies via Composer."
+		},
+		{
+			"label": "composer: update",
+			"type": "shell",
+			"command": "composer update",
+			"group": "build",
+			"detail": "Updates PHP dependencies via Composer."
+		}
+	]
+}

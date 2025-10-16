@@ -1,0 +1,91 @@
+{
+	// EditorConfig will handle per-language formatting, so let's defer to it.
+	"editor.detectIndentation": true,
+	"editor.formatOnSave": true,
+
+	// Code actions (like ESLint fixes) to run on save.
+	"editor.codeActionsOnSave": {
+		"source.fixAll.eslint": "explicit"
+	},
+
+	// Improve performance by excluding large folders from file watching.
+	"files.exclude": {
+		"**/.git": true,
+		"**/.svn": true,
+		"**/.hg": true,
+		"**/CVS": true,
+		"**/.DS_Store": true,
+		"**/node_modules": true,
+		"**/vendor": true
+	},
+
+	// Language-specific overrides.
+	// For JSONC files (like this one), use the built-in VS Code formatter.
+	"[jsonc]": {
+		"editor.defaultFormatter": "vscode.json-language-features"
+	},
+
+	// Set Prettier as the default formatter for languages not managed by EditorConfig.
+	"[javascript]": {
+		"editor.defaultFormatter": "esbenp.prettier-vscode"
+	},
+	"[typescript]": {
+		"editor.defaultFormatter": "esbenp.prettier-vscode"
+	},
+	"[json]": {
+		"editor.defaultFormatter": "esbenp.prettier-vscode"
+	},
+	"[scss]": {
+		"editor.defaultFormatter": "esbenp.prettier-vscode"
+	},
+	"[css]": {
+		"editor.defaultFormatter": "esbenp.prettier-vscode"
+	},
+
+	// Extension settings.
+	"prettier.useTabs": false,
+	"prettier.tabWidth": 2,
+	"prettier.singleQuote": true,
+	"prettier.trailingComma": "es5",
+
+	"eslint.alwaysShowStatus": true,
+	"eslint.format.enable": true,
+	"eslint.validate": [
+		"javascript",
+		"javascriptreact",
+		"typescript",
+		"typescriptreact"
+	],
+
+	"stylelint.enable": true,
+	"css.validate": false, // Disable built-in VS Code CSS validation
+	"scss.validate": false, // Disable built-in VS Code SCSS validation
+
+	// Intelephense (PHP language server) settings.
+	"intelephense.stubs": [
+		"Core",
+		"wordpress"
+	],
+	"intelephense.environment.includePaths": [
+		"vendor",
+		"wordpress"
+	],
+	"intelephense.format.braces.enable": false, // Defer to PHP CS Fixer for braces
+
+	// PHP CodeSniffer settings (requires phpcs extension).
+	"phpcs.enable": true,
+	"phpcs.standard": "WordPress-Core",
+	"phpcs.composerJsonPath": "${workspaceFolder}/composer.json",
+	"phpcs.executablePath": "${workspaceFolder}/vendor/bin/phpcs",
+
+	// PHP CS Fixer settings (requires php-cs-fixer extension).
+	"[php]": {
+		"editor.defaultFormatter": "junstyle.php-cs-fixer",
+		"editor.tabSize": 4,
+		"editor.insertSpaces": false
+	},
+	"php-cs-fixer.onsave": true,
+	"php-cs-fixer.executablePath": "${workspaceFolder}/vendor/bin/php-cs-fixer",
+	"php-cs-fixer.config": ".php-cs-fixer.dist.php", // Or your custom config file
+	"php-cs-fixer.formatHtml": true
+}
