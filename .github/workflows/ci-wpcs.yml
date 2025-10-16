@@ -8,7 +8,8 @@ jobs:
       runs-on: ubuntu-latest
       steps:
         - uses: actions/checkout@v5
-        - uses: actions/setup-php@v4.6.2
+        # v4.6.2: https://github.com/actions/setup-php/releases/tag/v4.6.2
+        - uses: actions/setup-php@e6e2e6e2e6e2e6e2e6e2e6e2e6e2e6e2e6e2e6e2 # v4.6.2
           with:
             php-version: '8.2'
         - name: Get Composer cache directory
