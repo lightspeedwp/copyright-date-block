@@ -1,0 +1,24 @@
+// Copyright Date Block — Editor Styles
+// This file contains styles for the block editor (Gutenberg)
+
+$block-bg: #f9f9f9;
+$block-border: #e0e0e0;
+$block-radius: 4px;
+$block-padding: 16px;
+$block-title-color: #222;
+
+.copyright-date-block-editor {
+	background: $block-bg;
+	border: 1px solid $block-border;
+	border-radius: $block-radius;
+	padding: $block-padding;
+	color: $block-title-color;
+	font-size: 1.1em;
+	box-sizing: border-box;
+}
+
+.copyright-date-block-editor__label {
+	font-weight: 600;
+	margin-bottom: 8px;
+	display: block;
+}

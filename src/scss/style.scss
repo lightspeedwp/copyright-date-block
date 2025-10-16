@@ -1,0 +1,24 @@
+// Copyright Date Block — Frontend Styles
+// This file contains styles for the block on the frontend
+
+$block-bg: #fff;
+$block-border: #d1d5db;
+$block-radius: 4px;
+$block-padding: 12px;
+$block-title-color: #333;
+
+.copyright-date-block {
+	background: $block-bg;
+	border: 1px solid $block-border;
+	border-radius: $block-radius;
+	padding: $block-padding;
+	color: $block-title-color;
+	font-size: 1em;
+	box-sizing: border-box;
+}
+
+.copyright-date-block__label {
+	font-weight: 500;
+	margin-bottom: 6px;
+	display: block;
+}

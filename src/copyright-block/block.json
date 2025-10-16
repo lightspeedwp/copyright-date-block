@@ -21,6 +21,7 @@
 	"supports": {
 		"color": {
 			"background": false,
+			"link": true,
 			"text": true
 		},
 		"html": false,

@@ -26,8 +26,9 @@ The Copyright Date Block provides a dynamic way to display copyright dates in yo
 ### Default Behavior
 
 By default, the block displays:
+
 ```
-© 2024
+© 2025
 ```
 
 The year automatically updates based on the current date, ensuring your copyright information stays current without manual updates.
@@ -39,11 +40,13 @@ The year automatically updates based on the current date, ensuring your copyrigh
 When the Copyright Date Block is selected, you'll see configuration options in the Settings sidebar:
 
 #### Show Starting Year
+
 - **Toggle**: Enable to display a date range
 - **Starting Year Field**: Enter the year your content or site was first published
 - **Result**: Displays as "© 2020–2024" (example)
 
 ### Validation
+
 - Starting years must be between 1900 and the current year + 10
 - Invalid years will not be saved
 - Empty or invalid starting years default to current year only
@@ -119,14 +122,17 @@ While the block uses a standard format (© Year or © Start–End), you can modi
 ### Common Issues
 
 #### Block Not Showing Current Year
+
 - **Problem**: Block shows an old year
 - **Solution**: The block uses server-side rendering for accuracy. Clear any caching plugins and refresh the page.
 
 #### Starting Year Not Saving
+
 - **Problem**: Starting year input doesn't save
 - **Solution**: Ensure the year is between 1900 and current year + 10. Invalid years are rejected.
 
 #### Block Not Available
+
 - **Problem**: Can't find the Copyright Date Block
 - **Solution**: Ensure the plugin is activated. Check WordPress admin → Plugins.
 

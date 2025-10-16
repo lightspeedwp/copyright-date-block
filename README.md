@@ -17,12 +17,14 @@ A WordPress Gutenberg block that displays your site's copyright date with automa
 ## Installation
 
 ### From WordPress Admin
+
 1. Download the latest release from [GitHub Releases](https://github.com/lightspeedwp/copyright-date-block/releases)
 2. Go to WordPress Admin → Plugins → Add New → Upload Plugin
 3. Choose the downloaded ZIP file and click "Install Now"
 4. Activate the plugin
 
 ### Development Installation
+
 ```bash
 git clone https://github.com/lightspeedwp/copyright-date-block.git
 cd copyright-date-block
@@ -107,6 +109,7 @@ npm test
 ```
 
 Tests cover:
+
 - Date utility functions
 - Year validation
 - Copyright range formatting
@@ -152,7 +155,7 @@ git push origin v1.0.0
 
 ## File Structure
 
-```
+```txt
 copyright-date-block/
 ├── .github/workflows/     # CI/CD workflows
 ├── .husky/               # Git hooks
@@ -203,6 +206,7 @@ npm run lint:php:fix
 ```
 
 The following standards are enforced:
+
 - WordPress Core coding standards
 - WordPress Extra coding standards  
 - WordPress Documentation standards
