@@ -1,0 +1,20 @@
+parameters:
+	level: max
+	paths:
+		- copyright-date-block.php
+		- src/
+	excludePaths:
+		- build/
+		- node_modules/
+		- vendor/
+		- tests/
+	bootstrapFiles:
+		- ./tests/bootstrap.php
+	ignoreErrors:
+		# Ignore WordPress core functions that might not be available during static analysis
+		- '#Function [a-zA-Z0-9_]+\(\) not found#'
+		# Ignore undefined constants that are WordPress specific
+		- '#Constant [A-Z_]+ not found#'
+	parallel:
+		jobSize: 20
+		maximumNumberOfProcesses: 10

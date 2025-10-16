@@ -13,11 +13,11 @@
 	},
 	"require-dev": {
 		"10up/phpcs-composer": "^3.0.0",
-		"phpstan/phpstan": "^1.11",
+		"phpstan/phpstan": "^2.0",
 		"phpstan/extension-installer": "^1.2",
 		"swissspidy/phpstan-no-private": "^1.0",
-		"phpstan/phpstan-deprecation-rules": "^1.1",
-		"phpstan/phpstan-strict-rules": "^1.1",
+		"phpstan/phpstan-deprecation-rules": "^2.0",
+		"phpstan/phpstan-strict-rules": "^2.0",
 		"johnbillion/wp-compat": "^1.0",
 		"roave/security-advisories": "dev-latest"
 	},

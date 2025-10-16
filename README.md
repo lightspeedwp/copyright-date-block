@@ -58,32 +58,53 @@ For advanced integration patterns, see [`examples/advanced-usage.php`](examples/
 
 - Node.js 20+
 - npm 10+
-- WordPress 6.7+
-- PHP 7.4+
+- WordPress 6.7+  
+- PHP 8.0+
+- Composer 2.0+
 
-### Setup
+### Quick Setup
 
 ```bash
-# Install dependencies
+# 1. Clone and install dependencies
+git clone https://github.com/lightspeedwp/copyright-date-block.git
+cd copyright-date-block
 npm install
+composer install
 
-# Start development
-npm run start
+# 2. Start WordPress development environment
+npm run env:start
 
-# Run tests
-npm test
-
-# Lint code
-npm run lint
-
-# Fix linting issues
-npm run lint:fix
-
-# Build for production
+# 3. Build assets
 npm run build
 
-# Create plugin ZIP
-npm run plugin-zip
+# 4. Start development with hot reload
+npm run start
+```
+
+### Full Development Workflow
+
+```bash
+# Start WordPress environment (first time)
+npm run env:start
+
+# Install Playwright browsers for E2E tests (optional)
+npx playwright install
+
+# Development commands
+npm run start         # Hot reload development
+npm run build         # Production build
+npm test             # All tests
+npm run lint         # All linting
+npm run lint:fix     # Auto-fix issues
+
+# WordPress environment management  
+npm run env:start    # Start WordPress
+npm run env:stop     # Stop WordPress
+npm run env:clean    # Clean data
+npm run env:destroy  # Destroy environment
+
+# Create distribution
+npm run plugin-zip   # Create installable ZIP
 ```
 
 ### Available Scripts
@@ -92,28 +113,59 @@ npm run plugin-zip
 |--------|-------------|
 | `npm run start` | Start development server with hot reload |
 | `npm run build` | Build production assets |
-| `npm run test` | Run Jest unit tests |
-| `npm run lint` | Run ESLint on JavaScript files and PHPCS on PHP files |
-| `npm run lint:js` | Run ESLint on JavaScript files only |
-| `npm run lint:php` | Run PHPCS on PHP files only |
-| `npm run lint:fix` | Fix ESLint and PHPCS issues automatically |
+| `npm test` | Run all tests (unit, E2E, PHP) |
+| `npm run test:unit` | Run JavaScript unit tests (Jest) |
+| `npm run test:e2e` | Run end-to-end tests (Playwright) |
+| `npm run test:php` | Run PHP unit tests (PHPUnit) |
+| `npm run test:coverage` | Generate code coverage reports |
+| `npm run lint` | Run all linting (JS, CSS, PHP, Markdown) |
+| `npm run lint:js` | Run ESLint on JavaScript files |
+| `npm run lint:css` | Run Stylelint on CSS/SCSS files |
+| `npm run lint:php` | Run PHPCS on PHP files |
+| `npm run lint:md` | Run markdownlint on Markdown files |
+| `npm run lint:fix` | Fix linting issues automatically |
 | `npm run format` | Format code with Prettier |
 | `npm run plugin-zip` | Create distributable plugin ZIP |
+| `npm run env:start` | Start WordPress development environment |
+| `npm run env:stop` | Stop WordPress development environment |
+| `npm run env:test` | Run tests in WordPress environment |
 
 ### Testing
 
-This plugin includes comprehensive Jest unit tests for utility functions:
+This plugin includes a comprehensive test suite with multiple testing frameworks:
 
 ```bash
+# Run all tests
 npm test
+
+# Run specific test types
+npm run test:unit      # JavaScript unit tests (Jest)
+npm run test:e2e       # End-to-end tests (Playwright)  
+npm run test:php       # PHP unit tests (PHPUnit)
+npm run test:coverage  # Generate coverage reports
 ```
 
-Tests cover:
+#### Test Coverage
 
-- Date utility functions
-- Year validation
-- Copyright range formatting
-- Edge cases and error handling
+- **JavaScript Unit Tests (Jest)**: Utility functions, components, date logic
+- **End-to-End Tests (Playwright)**: Full browser workflows, block functionality
+- **PHP Unit Tests (PHPUnit)**: Server-side logic, WordPress integration
+- **Integration Tests**: Component interactions and API endpoints
+
+#### WordPress Test Environment
+
+Tests run in a real WordPress environment using `@wordpress/env`:
+
+```bash
+# Start WordPress test environment
+npm run env:start
+
+# Run tests against WordPress instance
+npm run env:test
+
+# Stop environment
+npm run env:stop
+```
 
 ### Code Quality
 
@@ -157,21 +209,42 @@ git push origin v1.0.0
 
 ```txt
 copyright-date-block/
-├── .github/workflows/     # CI/CD workflows
-├── .husky/               # Git hooks
-├── build/                # Compiled assets (generated)
-├── examples/             # Advanced usage examples
-├── src/                  # Source files
-│   ├── utils/           # Utility functions and tests
-│   ├── block.json       # Block configuration
-│   ├── edit.js          # Block editor component
-│   ├── save.js          # Block save function
-│   ├── index.js         # Block registration
-│   └── render.php       # Server-side rendering
-├── USAGE.md             # Detailed usage guide
-├── package.json         # Dependencies and scripts
-└── copyright-date-block.php  # Main plugin file
+├── .github/              # GitHub configuration
+│   ├── workflows/       # CI/CD workflows (WPCS, tests, build, release)
+│   └── instructions/    # Development guidelines and standards
+├── .husky/              # Git hooks for pre-commit quality checks
+├── bin/                 # Build and development scripts
+├── build/               # Compiled assets (webpack output - auto-generated)
+├── coverage/            # Code coverage reports (auto-generated)
+├── examples/            # Advanced usage examples and integrations
+├── playwright-reports/  # E2E test reports and screenshots (auto-generated)
+├── src/                 # Source code
+│   ├── copyright-block/ # Block implementation
+│   └── scss/           # Stylesheet sources
+├── test-results/        # Test output files (auto-generated)
+├── tests/              # Test suites
+│   ├── bootstrap.php   # Test bootstrap and WordPress mocks
+│   ├── e2e/           # End-to-end tests (Playwright)
+│   ├── integration/    # Integration tests
+│   ├── php/           # PHP unit tests (PHPUnit)
+│   └── unit/          # JavaScript unit tests (Jest)
+├── vendor/             # Composer dependencies (auto-generated)
+├── composer.json       # PHP dependencies and scripts (PHPCS, PHPStan)
+├── package.json        # Node.js dependencies and build scripts
+├── phpcs.xml           # PHP Code Sniffer configuration
+├── phpstan.neon        # PHPStan static analysis configuration
+├── playwright.config.js # Playwright E2E test configuration
+├── webpack.config.js   # Build configuration
+└── copyright-date-block.php # Main plugin file
 ```
+
+### Key Directories
+
+- **`src/`**: Source code for blocks, styles, and JavaScript
+- **`tests/`**: Comprehensive test suite (unit, integration, E2E, PHP)
+- **`build/`**: Production-ready compiled assets
+- **`bin/`**: Development and build scripts
+- **Coverage & Reports**: Auto-generated test outputs and coverage data
 
 ## Contributing
 
