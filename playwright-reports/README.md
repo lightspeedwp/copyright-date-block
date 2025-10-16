@@ -57,6 +57,6 @@ reporter: [
 ## Important Notes
 
 - Reports are automatically generated after test runs
-- This directory is excluded from version control
+- Generated artifacts (screenshots, videos, traces, etc.) are excluded from version control via `.gitignore`; this README is tracked to ensure the directory exists
 - Screenshots and videos help debug test failures
 - Traces can be opened in Playwright's trace viewer
